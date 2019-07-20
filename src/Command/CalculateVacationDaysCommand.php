@@ -2,8 +2,10 @@
 
 namespace App\Command;
 
+use App\Factory\EmployeeFactory;
 use App\Resource\Employee;
 use App\Service\VacationDayCalculator;
+use DateTime;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,11 +19,15 @@ class CalculateVacationDaysCommand extends Command
     /** @var VacationDayCalculator */
     private $calculator;
 
-    public function __construct(VacationDayCalculator $calculator)
+    /** @var EmployeeFactory */
+    private $employeeFactory;
+
+    public function __construct(VacationDayCalculator $calculator, EmployeeFactory $employeeFactory)
     {
         parent::__construct();
 
         $this->calculator = $calculator;
+        $this->employeeFactory = $employeeFactory;
     }
 
     protected function configure()
@@ -48,16 +54,15 @@ class CalculateVacationDaysCommand extends Command
                 ]
             );
 
-        foreach ($employees as $employeeData) {
-            $employee = new Employee($employeeData);
-            $vacationDays = $this->calculator->calculate($employee, $year);
+        foreach ($employees as $data) {
+            $employee = $this->employeeFactory::create($data);
 
             $table->addRow([
                 $employee->getName(),
                 $employee->getDateOfBirth()->format('d.m.Y'),
                 $employee->getDateOfContract()->format('d.m.Y'),
                 $employee->getContractDays(),
-                $vacationDays
+                $this->calculator->calculate($employee, $year)
             ]);
         }
 

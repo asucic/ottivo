@@ -11,12 +11,12 @@ class Employee
     private $dateOfContract;
     private $contractDays;
 
-    public function __construct(array $data)
+    public function __construct(string $name, DateTime $dateOfBirth, DateTime $dateOfContract, ?int $contractDays)
     {
-        $this->name = $data['name'];
-        $this->dateOfBirth = DateTime::createFromFormat('d.m.Y', $data['date_of_birth']);
-        $this->dateOfContract = DateTime::createFromFormat('d.m.Y', $data['contract_start_date']);
-        $this->contractDays = $data['special_contract_days'];
+        $this->name = $name;
+        $this->dateOfBirth = $dateOfBirth;
+        $this->dateOfContract = $dateOfContract;
+        $this->contractDays = $contractDays;
     }
 
     public function getName(): string

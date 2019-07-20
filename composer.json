@@ -1,0 +1,12 @@
+{
+    "name": "antonio/ottivo",
+    "description": "Employee vacation day calculator",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Antonio Sucic",
+            "email": "antonio.suc@hotmail.com"
+        }
+    ],
+    "require": {}
+}

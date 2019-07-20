@@ -33,18 +33,18 @@ class VacationDayCalculatorTest extends TestCase
     }
 
     /** @test */
-    public function can_have_vacation_days_defined_by_special_contract()
+    public function can_have_base_vacation_days_defined_by_special_contract()
     {
         $employee = new Employee([
             'name' => 'Test',
-            'date_of_birth' => '01.01.1991',
+            'date_of_birth' => '01.01.1971',
             'contract_start_date' => '01.01.2000',
-            'special_contract_days' => 20,
+            'special_contract_days' => 24,
         ]);
 
-        $result = $this->vacationDayCalculator->calculate($employee, 2019);
+        $result = $this->vacationDayCalculator->calculate($employee, 2020);
 
-        $this->assertEquals($employee->getContractDays(), $result);
+        $this->assertEquals(28, $result);
     }
 
     /** @test */
@@ -105,5 +105,21 @@ class VacationDayCalculatorTest extends TestCase
         $result = $this->vacationDayCalculator->calculate($employee, 2000);
 
         $this->assertEquals(6, $result);
+    }
+
+
+    /** @test */
+    public function can_not_calculate_vacation_days_for_year_before_contract()
+    {
+        $employee = new Employee([
+            'name' => 'Test',
+            'date_of_birth' => '01.01.1971',
+            'contract_start_date' => '01.01.2000',
+            'special_contract_days' => null,
+        ]);
+
+        $result = $this->vacationDayCalculator->calculate($employee, 1999);
+
+        $this->assertEquals(0, $result);
     }
 }

@@ -18,14 +18,17 @@ class VacationDayCalculator
         # Increment a year so we can get contract time of target year
         $year++;
         $yearDateTime = DateTime::createFromFormat('d.m.Y', "01.01.$year");
-
-        # Set base vacation day number
         $vacationDays = $employee->getContractDays() ?? self::MINIMAL_VACATION_DAYS;
+
+        # Can not have vacation days before contract started
+        if ($yearDateTime < $employee->getDateOfContract()) {
+            return 0;
+        }
 
         # Add vacation days for senior employees
         $contractDuration = $employee->getDateOfContract()->diff($yearDateTime);
-        if ($employee->getDateOfBirth()->diff(new DateTime())->y >= self::SENIOR_EMPLOYEE_AGE) {
-            $vacationDays += $contractDuration->y / self::BONUS_YEARS;
+        if ($employee->getDateOfBirth()->diff($yearDateTime)->y >= self::SENIOR_EMPLOYEE_AGE) {
+            $vacationDays = $vacationDays + ($contractDuration->y / self::BONUS_YEARS);
         }
 
         # Get partial days for contracts shorter than a year

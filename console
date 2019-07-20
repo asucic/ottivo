@@ -3,14 +3,11 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+define('DATA_DIRECTORY', __DIR__ . '/data');
+
 use Symfony\Component\Console\Application;
 
-$builder = new DI\ContainerBuilder();
-$builder->addDefinitions([
-    Psr\Log\LoggerInterface::class => new Monolog\Logger(''),
-]);
-
-$container = $builder->build();
+$container = new DI\Container();
 
 $application = new Application();
 $application->add($container->get('App\Command\CalculateVacationDaysCommand'));
